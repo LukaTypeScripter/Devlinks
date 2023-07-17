@@ -10,3 +10,7 @@ body {
   background-color: #fafafa;
   font-family: 'Instrument Sans', sans-serif;
 }
+input:hover {
+  border-color: #633cff;
+  box-shadow: 0 0 32px 0 rgba(99,60,255,.25);
+}

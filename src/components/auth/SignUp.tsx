@@ -2,6 +2,8 @@ import styled from "styled-components"
 import { email, iconPassword, logoLarge } from "../../images"
 import { useState } from "react";
 import Button from "../reuseable/Button";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase/firebase";
 
 function SignUp() {
   const [emailInput, setEmailInput] = useState("");
@@ -29,17 +31,21 @@ function SignUp() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Validation logic
     setIsValidEmail(validateEmail(emailInput));
     setIsEmptyEmail(emailInput.trim() === "");
     setIsEmptyPassword(passwordInput.trim() === "");
     setPasswordsMatch(passwordInput === repeatPasswordInput);
+    if (!passwordsMatch) {
+      return;
+    }
 
-    // If all validations pass and passwords match, you can proceed with the form submission here
-    // For this example, I'll just log the form data
-    console.log("Email:", emailInput);
-    console.log("Password:", passwordInput);
-    console.log("Repeat Password:", repeatPasswordInput);
+    createUserWithEmailAndPassword(auth,emailInput,passwordInput)
+    .then((userCredentials) => {
+        console.log(userCredentials)
+    }).catch((err) => {
+        console.log(err)
+    })
+
   };
 
   const validateEmail = (email: string) => {
@@ -50,7 +56,7 @@ function SignUp() {
     <AuthCont>
         <img src={logoLarge} alt="" />
 <section>
-    <h1 className="title">Login</h1>
+    <h1 className="title">Create Accout</h1>
     <p className="desc">Add your details below to get back into the app</p>
     <form action="" onSubmit={(e) => handleSubmit(e)}>
         <fieldset>

@@ -41,6 +41,28 @@ import phoneMockup from './illustration-phone-mockup.svg'
 import logoLarge from './logo-devlinks-large.svg'
 import logoSmall from './logo-devlinks-small.svg'
 
+const randomId = function(length:number) {
+    return Math.random().toString(36).substring(2, length+2);
+  };
+export const iconsData = [
+    { name: 'link', icon: link, id: randomId(10) },
+    { name: 'codeWars', icon: codeWars, id: randomId(8) },
+    { name: 'codepen', icon: codepen, id: randomId(6) },
+    { name: 'codeWars', icon: codeWars, id: randomId(11) },
+    { name: 'email', icon: email, id: randomId(10) },
+    { name: 'facebook', icon: facebook, id: randomId(10) },
+    { name: 'freecodecamp', icon: freecodecamp, id: randomId(10) },
+    { name: 'github', icon: github, id: randomId(10)},
+    { name: 'gitlab', icon: gitlab, id: randomId(10) },
+    { name: 'hashnode', icon: hashnode, id: randomId(10) },
+    { name: 'youtube', icon: youtube, id: randomId(10) },
+    { name: 'twitch', icon: twitch, id: randomId(10) },
+    { name: 'twitter', icon: twitter, id:randomId(10) },
+    { name: 'twitch', icon: twitch, id: randomId(10)},
+    { name: 'stack', icon: stack, id: randomId(10) },
+    { name: 'linkidn', icon: linkidn, id: randomId(10) },
+  ];
+
 export {
     link,
     codeWars,

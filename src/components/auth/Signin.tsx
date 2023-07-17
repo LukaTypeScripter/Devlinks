@@ -2,7 +2,8 @@ import styled from "styled-components"
 import { email, iconPassword, logoLarge } from "../../images"
 import { useState } from "react";
 import Button from "../reuseable/Button";
-
+import { auth } from "../../firebase/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 function Signin() {
     const [emailInput, setEmailInput] = useState("");
     const [passwordInput, setPasswordInput] = useState("");
@@ -24,10 +25,12 @@ function Signin() {
       setIsValidEmail(validateEmail(emailInput));
       setIsEmptyEmail(emailInput.trim() === "");
       setIsEmptyPassword(passwordInput.trim() === "");
-  
-    
-      console.log("Email:", emailInput);
-      console.log("Password:", passwordInput);
+        signInWithEmailAndPassword(auth,emailInput,passwordInput)
+        .then((userCredentials) => {
+            console.log(userCredentials)
+        }).catch((err) => {
+            console.log(err)
+        })
     };
     const validateEmail = (email: string) => {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,7 +46,7 @@ function Signin() {
         <fieldset>
             <label htmlFor="">Email Adress</label>
             <div className="inp">
-                <input type="text" id="input" placeholder="e.g. alex@email.com" onChange={(e) => handleEmailChange(e)}/>
+                <input type="text" id="input" placeholder="e.g. alex@email.com" onChange={(e) => handleEmailChange(e)} value={emailInput}/>
                 <img src={email} alt="email" className="email__icon" />
                 {isEmptyEmail && <span className="valid__empty"> can't be empty</span>}
                 {isValidEmail && emailInput.length > 0 && <span className="valid__empty"> not valid email</span>}
@@ -52,7 +55,7 @@ function Signin() {
         <fieldset>
             <label htmlFor="">Password</label>
             <div className="inp">
-                <input type="password" id="input" placeholder="Enter Password"  onChange={(e) => handlePasswordChange(e)}/>
+                <input type="password" id="input" placeholder="Enter Password"  onChange={(e) => handlePasswordChange(e)} value={passwordInput}/>
                 <img src={iconPassword} alt="password" className="email__icon" />
                 {isEmptyPassword && <span className="valid__empty"> can't be empty</span>}
             </div>
