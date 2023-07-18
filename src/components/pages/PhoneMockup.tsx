@@ -1,15 +1,31 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
-import { phoneMockup } from '../../images'
+import { arrowRigth, colors, phoneMockup } from '../../images'
+import LinksContext from '../../contexts/Links'
+
 function PhoneMockup() {
+    const {links,selectedPlatforms} = useContext(LinksContext)
+  
   return (
     <PhoneMockupCont>
     <div className='phone__cont'>
     <img src={phoneMockup} alt="phone" className='phone' />
     <div className="link__boxes">
-<div className="inside__box">
+{links.map((link,index) => {
+     const platformName = selectedPlatforms[index]?.name;
+     const backgroundColor = platformName && colors[platformName] ? colors[platformName] : '#333';
+    return (
+        <a href={link.url} key={index} target='_blank'>
+        <div className="inside__box"  style={{ backgroundColor }}>
+        <img src={selectedPlatforms[index]?.icon} alt="" />
+        {selectedPlatforms[index]?.name}
+        <img src={arrowRigth} alt="" />
+        </div>
+        </a>
+    )
+   
+})}
 
-</div>
     </div>
     </div>
 </PhoneMockupCont>

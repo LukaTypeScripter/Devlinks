@@ -45,24 +45,38 @@ const randomId = function(length:number) {
     return Math.random().toString(36).substring(2, length+2);
   };
 export const iconsData = [
-    { name: 'link', icon: link, id: randomId(10) },
-    { name: 'codeWars', icon: codeWars, id: randomId(8) },
     { name: 'codepen', icon: codepen, id: randomId(6) },
-    { name: 'codeWars', icon: codeWars, id: randomId(11) },
-    { name: 'email', icon: email, id: randomId(10) },
-    { name: 'facebook', icon: facebook, id: randomId(10) },
-    { name: 'freecodecamp', icon: freecodecamp, id: randomId(10) },
-    { name: 'github', icon: github, id: randomId(10)},
-    { name: 'gitlab', icon: gitlab, id: randomId(10) },
-    { name: 'hashnode', icon: hashnode, id: randomId(10) },
-    { name: 'youtube', icon: youtube, id: randomId(10) },
-    { name: 'twitch', icon: twitch, id: randomId(10) },
-    { name: 'twitter', icon: twitter, id:randomId(10) },
-    { name: 'twitch', icon: twitch, id: randomId(10)},
-    { name: 'stack', icon: stack, id: randomId(10) },
-    { name: 'linkidn', icon: linkidn, id: randomId(10) },
+    { name: 'Codewars', icon: codeWars, id: randomId(11) },
+    { name: 'Facebook', icon: facebook, id: randomId(10) },
+    { name: 'freeCodeCamp', icon: freecodecamp, id: randomId(10) },
+    { name: 'Github', icon: github, id: randomId(10)},
+    { name: 'GitLab', icon: gitlab, id: randomId(10) },
+    { name: 'Hashnode', icon: hashnode, id: randomId(10) },
+    { name: 'Youtube', icon: youtube, id: randomId(10) },
+    { name: 'Twitter', icon: twitter, id:randomId(10) },
+    { name: 'Twitch', icon: twitch, id: randomId(10)},
+    { name: 'Stack Overflow', icon: stack, id: randomId(10) },
+    { name: 'LinkedIn', icon: linkidn, id: randomId(10) },
   ];
-
+  interface Colors {
+    [key: string]: string;
+  }
+  export const colors:Colors = {
+    'Github': '#1A1A1A',
+    'Frontend Mentor': '#FFF',
+    'Twitter': '#43B7E9',
+    'LinkedIn': '#2D68FF',
+    'Youtube': '#EE3939',
+    'Facebook': '#2442AC',
+    'Twitch': '#9146ff',
+    'Dev.to': '#333',
+    'Codewars': '#8A1A50',
+    'freeCodeCamp': '#302267',
+    'GitLab': '#EB4925',
+    'Hashnode': '#0330D1',
+    'Stack Overflow': '#EC7100',
+  }
+ 
 export {
     link,
     codeWars,

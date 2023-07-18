@@ -1,21 +1,22 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import { iconsData } from '../../images'
+import LinksContext from '../../contexts/Links';
+interface PlatformProps {
+  linkIndex: number;
+  setIsOpen: (index: number) => void
+}
 
-interface SelectedPlatformInfo {
-    name: string;
-    icon: string;
-    id: string;
-  }
-function Platforms() {
-    const [selectedPlatform, setSelectedPlatform] = useState<SelectedPlatformInfo | null>(null);
+function Platforms({linkIndex,setIsOpen}:PlatformProps) {
+  const {setSelectedPlatformForLink,} = useContext(LinksContext)
 
     const handlePlatformSelection = (platform:string) => {
       const selectedPlatformInfo= iconsData.find((icon) => icon.name === platform);
-      setSelectedPlatform(selectedPlatformInfo || null);
+      setSelectedPlatformForLink(linkIndex, selectedPlatformInfo || null);
+      setIsOpen(linkIndex)
+      console.log(selectedPlatformInfo)
     };
-    console.log(selectedPlatform);
-    
+
   return (
     <LinksModalCont>
     {iconsData.map((icons,index) => (

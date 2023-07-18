@@ -4,6 +4,8 @@ import { logoLarge,link, profileDetailsHeader, phoneMockup } from '../../images'
 import Button from '../reuseable/Button'
 import PhoneMockup from './PhoneMockup';
 import LinksForm from './LinksForm';
+import DetailsMockup from './ProfileDetails/DetailsMockup';
+import Details from './ProfileDetails/Details';
 function Account() {
     const [activeLink, setActiveLink] = useState('links');
   return (
@@ -22,13 +24,25 @@ function Account() {
          onClick={() => setActiveLink('profile')}
         >
         <img src={profileDetailsHeader} alt="" className='links'/>
-        Links
+        Profile Details
         </li>
         </ul>
         <Button Text='Preview' color='#633cff' bgColor='transparent'  border='1px solid #633cff' width='114px' height='46px' />
         </nav>
-        <PhoneMockup />
-        <LinksForm />
+        
+        {activeLink === "links" ? (
+          <>
+          
+          <PhoneMockup />
+          <LinksForm />
+          </>
+        ): (
+          <>
+          <DetailsMockup />
+          <Details />
+          </>
+        )}
+        
     </AccCont>
   )
 }

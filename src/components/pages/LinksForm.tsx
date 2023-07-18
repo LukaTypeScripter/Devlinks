@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Button from '../reuseable/Button'
 import { cheveronDown, link } from '../../images'
 import Platforms from '../Modals/Platforms';
+import LinksContext from '../../contexts/Links';
+import Empty from './Empty';
 interface LinkItem {
     platform: string;
     url: string;
@@ -10,8 +12,17 @@ interface LinkItem {
   
 function LinksForm() {
     const initialLinks: LinkItem[] = JSON.parse(localStorage.getItem('links')!) || [];
-    const [links, setLinks] = useState(initialLinks);
-
+    const [isOpenArray, setIsOpenArray] = useState<boolean[]>(initialLinks.map(() => false));
+    console.log(isOpenArray)
+   
+    const {selectedPlatforms,setLinks,links} = useContext(LinksContext)
+    const toggleModal = (index: number) => {
+      setIsOpenArray((prevIsOpenArray) => {
+        const updatedArray = [...prevIsOpenArray];
+        updatedArray[index] = !updatedArray[index];
+        return updatedArray;
+      });
+    };
     const addNewLink = (e:any) => {
         e.preventDefault()
         if(links.length < 5) {
@@ -22,19 +33,15 @@ function LinksForm() {
         e?.preventDefault();
         setLinks((prevLinks) => prevLinks.filter((link, i) => i !== index));
       };
-  
-      const handlePlatformChange = (index:number, platform:string) => {
-        const updatedLinks = [...links];
-        updatedLinks[index].platform = platform;
-        setLinks(updatedLinks);
-      };
-    
-      const handleUrlChange = (index:number, url:string) => {
+     const handleUrlChange = (index:number, url:string) => {
         const updatedLinks = [...links];
         updatedLinks[index].url = url;
         setLinks(updatedLinks);
       };
-    
+     
+
+      
+      
       useEffect(() => {
         localStorage.setItem('links', JSON.stringify(links));
       }, [links]);
@@ -45,39 +52,53 @@ function LinksForm() {
         <fieldset className='all__links'>
         <Button onClick={addNewLink}  color='#633cff' border='1px solid #633cff' bgColor='transparent' borderRadius='8px' height='46px' width='100%' Text='+ Add new link'/>
         
-        {links.map((links: LinkItem, index: number) => {
-          const { platform, url } = links;
-          const key = platform || index;
-          return (
-            <fieldset className='links' key={key}>
-              <h1>= Link #{index + 1}</h1>
-              <button onClick={(e) => RemoveLink(index, e)}>Remove</button>
-              <fieldset className='platform'>
-                <label htmlFor=''>Platform</label>
-                <div className='platform__box'>
-                  <img src='' alt=''  />
-                    <Platforms />
-                  <img src={cheveronDown} alt='' className='cheveron' />
-                </div>
+        {links.length === 0 ? (<>
+        <Empty />
+        </>) : (
+          <>
+          {links.map((links: LinkItem, index: number) => {
+            const { platform, url } = links;
+            const key = platform || index;
+            return (
+              <fieldset className='links' key={key}>
+                <h1>= Link #{index + 1}</h1>
+                <button onClick={(e) => RemoveLink(index, e)}>Remove</button>
+                <fieldset className='platform'>
+                  <label htmlFor=''>Platform</label>
+                  <div className='platform__box' onClick={() => toggleModal(index)}>
+                    
+                  {selectedPlatforms[index] ? (
+                      <>
+                        <img src={selectedPlatforms[index]?.icon} alt='' />
+                        {selectedPlatforms[index]?.name}
+                      </>
+                    ) : (
+                      'Select Platform'
+                    )}
+                    {isOpenArray[index] && <Platforms linkIndex={index} setIsOpen={toggleModal} />}
+                    <img src={cheveronDown} alt='' className='cheveron' />
+                  </div>
+                </fieldset>
+                <fieldset className='paste__link'>
+                  <label htmlFor=''>Link</label>
+                  <div className='input__cont'>
+                    <img src={link} alt='link' className='link__icon' />
+                    <input
+                      type='text'
+                      className='link__input'
+                      placeholder='e.g. https://www.github.com/johnappleseed'
+                      value={url}
+                      name='url'
+                      onChange={(e) => handleUrlChange(index, e.target.value)}
+                    />
+                    <p className='error'>Can't be empty</p>
+                  </div>
+                </fieldset>
               </fieldset>
-              <fieldset className='paste__link'>
-                <label htmlFor=''>Link</label>
-                <div className='input__cont'>
-                  <img src={link} alt='link' className='link__icon' />
-                  <input
-                    type='text'
-                    className='link__input'
-                    placeholder='e.g. https://www.github.com/johnappleseed'
-                    value={url}
-                    name='url'
-                    onChange={(e) => handleUrlChange(index, e.target.value)}
-                  />
-                  <p className='error'>Can't be empty</p>
-                </div>
-              </fieldset>
-            </fieldset>
-          );
-        })}
+            );
+          })}
+          </>
+        )}
        
         </fieldset>
         
