@@ -5,6 +5,10 @@ import SignIn from "./components/auth/Signin";
 import Account from "./components/pages/Account";
 
 function App() {
+  //TODO:be able to save when click save.
+  //TODO:go to previer page
+  //TODO:create private route
+  //TODO:make site responsive
   return (
     <Router>
       <Routes>
