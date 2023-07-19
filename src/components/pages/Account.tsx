@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import { logoLarge,link, profileDetailsHeader, phoneMockup } from '../../images'
 import Button from '../reuseable/Button'
@@ -6,12 +6,18 @@ import PhoneMockup from './PhoneMockup';
 import LinksForm from './LinksForm';
 import DetailsMockup from './ProfileDetails/DetailsMockup';
 import Details from './ProfileDetails/Details';
+import { getAuth, signOut } from 'firebase/auth';
+import AuthContext from '../../contexts/Auth';
+import { useNavigate } from 'react-router-dom';
 function Account() {
     const [activeLink, setActiveLink] = useState('links');
+    const {UsersignOut} = useContext(AuthContext)
+    const navigate = useNavigate()
+
   return (
     <AccCont>
         <nav>
-            <img src={logoLarge} alt="logo" />
+            <img src={logoLarge} alt="logo" onClick={UsersignOut}/>
         <ul className='navbar__links'>
         <li  className={activeLink === 'links' ? 'active' : ''}
         onClick={() => setActiveLink('links')}
@@ -27,7 +33,7 @@ function Account() {
         Profile Details
         </li>
         </ul>
-        <Button Text='Preview' color='#633cff' bgColor='transparent'  border='1px solid #633cff' width='114px' height='46px' />
+        <Button Text='Preview' color='#633cff' bgColor='transparent'  border='1px solid #633cff' width='114px' height='46px' onClick={() => navigate('/preview')}/>
         </nav>
         
         {activeLink === "links" ? (

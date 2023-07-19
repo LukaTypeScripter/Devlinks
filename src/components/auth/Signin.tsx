@@ -4,6 +4,7 @@ import { useState } from "react";
 import Button from "../reuseable/Button";
 import { auth } from "../../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 function Signin() {
     const [emailInput, setEmailInput] = useState("");
     const [passwordInput, setPasswordInput] = useState("");
@@ -19,7 +20,7 @@ function Signin() {
       setPasswordInput(e.target.value);
       setIsEmptyPassword(e.target.value.trim() === "");
     };
-  
+    const navigate = useNavigate()
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setIsValidEmail(validateEmail(emailInput));
@@ -28,6 +29,8 @@ function Signin() {
         signInWithEmailAndPassword(auth,emailInput,passwordInput)
         .then((userCredentials) => {
             console.log(userCredentials)
+            localStorage.setItem("isLoggedIn", "true");
+            navigate('/account')
         }).catch((err) => {
             console.log(err)
         })

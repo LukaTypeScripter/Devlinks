@@ -4,6 +4,7 @@ import { useState } from "react";
 import Button from "../reuseable/Button";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
   const [emailInput, setEmailInput] = useState("");
@@ -27,7 +28,7 @@ function SignUp() {
   const handleRepeatPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRepeatPasswordInput(e.target.value);
   };
-
+  const navigate = useNavigate()
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -42,7 +43,8 @@ function SignUp() {
     createUserWithEmailAndPassword(auth,emailInput,passwordInput)
     .then((userCredentials) => {
         console.log(userCredentials)
-    }).catch((err) => {
+        navigate('/account')
+      }).catch((err) => {
         console.log(err)
     })
 

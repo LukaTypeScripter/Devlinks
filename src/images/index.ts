@@ -40,7 +40,7 @@ import ilustrationEmty from './illustration-empty.svg'
 import phoneMockup from './illustration-phone-mockup.svg'
 import logoLarge from './logo-devlinks-large.svg'
 import logoSmall from './logo-devlinks-small.svg'
-
+import placeholderimage from './placeholder-image.png'
 const randomId = function(length:number) {
     return Math.random().toString(36).substring(2, length+2);
   };
@@ -119,7 +119,8 @@ export {
     iconPassword,
     iconHeaderLinks,
     linkidn,
-    linkidnGray
+    linkidnGray,
+    placeholderimage
 }
 
 
