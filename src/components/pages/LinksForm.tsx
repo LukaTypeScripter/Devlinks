@@ -5,18 +5,20 @@ import { cheveronDown, link } from '../../images'
 import Platforms from '../Modals/Platforms';
 import LinksContext from '../../contexts/Links';
 import Empty from './Empty';
+import { v4 as uuidv4 } from 'uuid';
 interface LinkItem {
     platform: string;
     url: string;
+    id: string;
   }
   
 function LinksForm() {
     const initialLinks: LinkItem[] = JSON.parse(localStorage.getItem('links')!) || [];
     const [isOpenArray, setIsOpenArray] = useState<boolean[]>(initialLinks.map(() => false));
-    console.log(isOpenArray)
-   
+   const [isIndex,setIsindex] = useState(0)
     const {selectedPlatforms,setLinks,links} = useContext(LinksContext)
     const toggleModal = (index: number) => {
+      setIsindex(index)
       setIsOpenArray((prevIsOpenArray) => {
         const updatedArray = [...prevIsOpenArray];
         updatedArray[index] = !updatedArray[index];
@@ -25,8 +27,9 @@ function LinksForm() {
     };
     const addNewLink = (e:any) => {
         e.preventDefault()
-        if(links.length < 5) {
-            setLinks([...links,{platform:'',url:''}])
+        if(links.length < 4) {
+          const newLink: LinkItem = { platform:"", url: '', id: uuidv4() };
+          setLinks([...links, newLink]);
         }
     }
     const RemoveLink = (index: number, e?: React.MouseEvent<HTMLButtonElement>) => {
@@ -56,7 +59,7 @@ function LinksForm() {
         <Empty />
         </>) : (
           <>
-          {links.map((links: LinkItem, index: number) => {
+          {links.map((links, index) => {
             const { platform, url } = links;
             const key = platform || index;
             return (
@@ -91,7 +94,6 @@ function LinksForm() {
                       name='url'
                       onChange={(e) => handleUrlChange(index, e.target.value)}
                     />
-                    <p className='error'>Can't be empty</p>
                   </div>
                 </fieldset>
               </fieldset>

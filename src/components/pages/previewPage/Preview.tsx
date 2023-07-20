@@ -1,11 +1,17 @@
 
 import styled from 'styled-components'
 import Button from '../../reuseable/Button'
-import { placeholderimage } from '../../../images'
+import { arrowRigth, colors, placeholderimage } from '../../../images'
 import { useNavigate } from 'react-router-dom'
+import { useContext } from 'react'
+import LinksContext from '../../../contexts/Links'
+import DetailsContext from '../../../contexts/profileDetails'
 
 function Preview() {
     const navigate = useNavigate()
+    const {links,selectedPlatforms} = useContext(LinksContext)
+    const {email,firstName,lastName,profilePicture} = useContext(DetailsContext)
+  
   return (
     <PreviewCont>
         <header>
@@ -14,11 +20,27 @@ function Preview() {
                 <Button width='133px' height='46px'  bgColor='#633cff' color='#fff' borderRadius='8px' Text='Share Link'/>
             </nav>
             <section className='user__cont'>
-                <img src={placeholderimage} alt="placeholder" className='placeholder__img' />
-                <h1>awdawda</h1>
-                <h2>awdawda</h2>
+                <img src={profilePicture === null ?placeholderimage : profilePicture} alt="placeholder" className='placeholder__img' />
+                <h1>{firstName} {lastName}</h1>
+                <h2>{email}</h2>
                 {/**here goes platforms */}
-                <div></div>
+                <div className="link__boxes">
+{links.map((link,index) => {
+     const platformName = selectedPlatforms[index]?.name;
+     const backgroundColor = platformName && colors[platformName] ? colors[platformName] : '#333';
+    return (
+        <a href={link.url} key={index} target='_blank'>
+        <div className="inside__box"  style={{ backgroundColor }}>
+        <img src={selectedPlatforms[index]?.icon} alt="" />
+        {selectedPlatforms[index]?.name}
+        <img src={arrowRigth} alt="" />
+        </div>
+        </a>
+    )
+   
+})}
+
+    </div>
             </section>
         </header>
     </PreviewCont>
@@ -107,5 +129,33 @@ const PreviewCont = styled.main`
             background-color: #fff;
         }
     }
+    .link__boxes {
+        width: 237px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: absolute;
+    top: 278px;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+.inside__box {
+    width: 100%;
+    height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 8px;
+    color: #fff;
+    font-size: .75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    position: relative;
+    cursor: grab;
+    text-decoration-line: none;
+}
 `
 export default Preview

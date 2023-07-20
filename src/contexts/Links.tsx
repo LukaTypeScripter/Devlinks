@@ -4,6 +4,7 @@ const LinksContext = createContext<LinksContextValue>(initialContextValue);
 interface LinkItem {
     platform: string;
     url: string;
+    id:string;
   }
 export const LinksContextProvider = ({
   children,
@@ -30,7 +31,8 @@ export const LinksContextProvider = ({
     selectedPlatforms,
     setSelectedPlatformForLink,
     links,
-    setLinks
+    setLinks,
+    setSelectedPlatforms
   };
  
   return <LinksContext.Provider value={value}>{children}</LinksContext.Provider>;

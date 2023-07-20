@@ -5,66 +5,82 @@ import Button from "../reuseable/Button";
 import { auth } from "../../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { useForm, SubmitHandler, FieldValues, Controller } from "react-hook-form";
 function Signin() {
-    const [emailInput, setEmailInput] = useState("");
-    const [passwordInput, setPasswordInput] = useState("");
-    const [isValidEmail, setIsValidEmail] = useState(true);
-    const [isEmptyEmail, setIsEmptyEmail] = useState(true);
-    const [isEmptyPassword, setIsEmptyPassword] = useState(true);
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setEmailInput(e.target.value);
-      setIsEmptyEmail(e.target.value.trim() === "");
-    };
+    const { control, handleSubmit, formState: { errors }, setError } = useForm();
   
-    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setPasswordInput(e.target.value);
-      setIsEmptyPassword(e.target.value.trim() === "");
-    };
-    const navigate = useNavigate()
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      setIsValidEmail(validateEmail(emailInput));
-      setIsEmptyEmail(emailInput.trim() === "");
-      setIsEmptyPassword(passwordInput.trim() === "");
-        signInWithEmailAndPassword(auth,emailInput,passwordInput)
-        .then((userCredentials) => {
-            console.log(userCredentials)
+    const navigate = useNavigate();
+  
+    const onSubmit: SubmitHandler<FieldValues>  = async (data) => {
+        try {
+            if (!data.email) {
+              setError("email", { type: "manual", message: "Email is required" });
+              return;
+            }
+      
+            if (!data.password) {
+              setError("password", { type: "manual", message: "Password is required" });
+              return;
+            }
+      
+            const userCredentials = await signInWithEmailAndPassword(auth, data.email, data.password);
+            console.log(userCredentials);
             localStorage.setItem("isLoggedIn", "true");
-            navigate('/account')
-        }).catch((err) => {
-            console.log(err)
-        })
+            navigate("/account");
+          } catch (err) {
+            console.log(err);
+            setError("email", { type: "manual", message: "Invalid email or password" });
+          }
     };
-    const validateEmail = (email: string) => {
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailPattern.test(email);
-      };
   return (
     <AuthCont>
         <img src={logoLarge} alt="" />
 <section>
     <h1 className="title">Login</h1>
     <p className="desc">Add your details below to get back into the app</p>
-    <form action="" onSubmit={(e) => handleSubmit(e)}>
+    <form action="" onSubmit={handleSubmit(onSubmit)}>
         <fieldset>
             <label htmlFor="">Email Adress</label>
             <div className="inp">
-                <input type="text" id="input" placeholder="e.g. alex@email.com" onChange={(e) => handleEmailChange(e)} value={emailInput}/>
-                <img src={email} alt="email" className="email__icon" />
-                {isEmptyEmail && <span className="valid__empty"> can't be empty</span>}
-                {isValidEmail && emailInput.length > 0 && <span className="valid__empty"> not valid email</span>}
+            <Controller
+              name="email"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <>
+                  <input {...field} type="text" id="input" placeholder="e.g. alex@email.com" />
+                  <img src={email} alt="email" className="email__icon" />
+                </>
+              )}
+            />
             </div>
         </fieldset>
         <fieldset>
             <label htmlFor="">Password</label>
             <div className="inp">
-                <input type="password" id="input" placeholder="Enter Password"  onChange={(e) => handlePasswordChange(e)} value={passwordInput}/>
-                <img src={iconPassword} alt="password" className="email__icon" />
-                {isEmptyPassword && <span className="valid__empty"> can't be empty</span>}
+            <Controller
+              name="password"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <>
+                  <input {...field} type="password" id="input" placeholder="Enter Password" />
+                  <img src={iconPassword} alt="password" className="email__icon" />
+                </>
+              )}
+            />
+           
             </div>
         </fieldset>
+                {errors.email && typeof errors.email.message === 'string' && (
+              <span className="valid__empty">{errors.email.message}! </span>
+            )}
         <Button Text="Login" bgColor="#633cff"  color="#fff" height="46px"/>
     </form>
+    <p className="auth">
+    Don't have an account?&nbsp;
+    <Button  bgColor="transparent" color="#633cff" Text="Create Account" onClick={() => navigate('/signup')}/>
+    </p>
 </section>
     </AuthCont>
   )
@@ -168,27 +184,24 @@ const AuthCont = styled.div`
     object-fit: cover;
     height: auto;
     }
-   .valid__empty {
-    display: block;
-    height: 18px;
-    color: #ff3939;
-    text-align: right;
-    font-size: .75rem;
-    font-family: var(--font);
-    font-style: normal;
-    font-weight: 400;
-    line-height: 150%;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    right: 16px;
-   }
+ 
     
     }
          }
     }
     }
+    .valid__empty {
+        display: block;
+    height: 18px;
+    color: #ff3939;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+   }
+   .auth {
+
+   }
 `
 
 export default Signin

@@ -5,108 +5,117 @@ import Button from "../reuseable/Button";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
 import { useNavigate } from "react-router-dom";
+import { Controller, FieldErrors, FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 function SignUp() {
-  const [emailInput, setEmailInput] = useState("");
-  const [passwordInput, setPasswordInput] = useState("");
-  const [repeatPasswordInput, setRepeatPasswordInput] = useState("");
-  const [isValidEmail, setIsValidEmail] = useState(true);
-  const [isEmptyEmail, setIsEmptyEmail] = useState(true);
-  const [isEmptyPassword, setIsEmptyPassword] = useState(true);
-  const [passwordsMatch, setPasswordsMatch] = useState(true);
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmailInput(e.target.value);
-    setIsEmptyEmail(e.target.value.trim() === "");
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswordInput(e.target.value);
-    setIsEmptyPassword(e.target.value.trim() === "");
-  };
-
-  const handleRepeatPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRepeatPasswordInput(e.target.value);
-  };
+  const { control, handleSubmit, formState: { errors }, setError,getValues  } = useForm();
   const navigate = useNavigate()
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit:SubmitHandler<FieldValues>  = async (data) => {
+    try {
+      if (!data.email) {
+        setError("email", { type: "manual", message: "Email is required" });
+        return;
+      }
 
-    setIsValidEmail(validateEmail(emailInput));
-    setIsEmptyEmail(emailInput.trim() === "");
-    setIsEmptyPassword(passwordInput.trim() === "");
-    setPasswordsMatch(passwordInput === repeatPasswordInput);
-    if (!passwordsMatch) {
-      return;
+      if (!data.password) {
+        setError("password", { type: "manual", message: "Password is required" });
+        return;
+      }
+
+      if (data.password !== data.repeatPassword) {
+        setError("repeatPassword", { type: "manual", message: "Passwords do not match" });
+        return;
+      }
+
+      // Continue with form submission if all fields are filled
+      const userCredentials = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      console.log(userCredentials);
+      localStorage.setItem("isLoggedIn", "true");
+      navigate("/account");
+    } catch (err) {
+      console.log(err);
+      setError("email", { type: "manual", message: "Invalid email or password" });
     }
 
-    createUserWithEmailAndPassword(auth,emailInput,passwordInput)
-    .then((userCredentials) => {
-        console.log(userCredentials)
-        navigate('/account')
-      }).catch((err) => {
-        console.log(err)
-    })
-
   };
 
-  const validateEmail = (email: string) => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailPattern.test(email);
-  };
+
   return (
     <AuthCont>
         <img src={logoLarge} alt="" />
 <section>
     <h1 className="title">Create Accout</h1>
     <p className="desc">Add your details below to get back into the app</p>
-    <form action="" onSubmit={(e) => handleSubmit(e)}>
+    <form action="" onSubmit={handleSubmit(onSubmit)}>
         <fieldset>
           <label htmlFor="">Email Address</label>
           <div className="inp">
-            <input
-              type="text"
-              id="input"
-              placeholder="e.g. alex@email.com"
-              onChange={(e) => handleEmailChange(e)}
+          <Controller
+              name="email"
+              control={control}
+              defaultValue=""
+              rules={{ required: "Email is required", pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Not a valid email" } }}
+              render={({ field }) => (
+                <>
+                  <input {...field} type="text" id="input" placeholder="e.g. alex@email.com"  />
+                  <img src={email} alt="email" className="email__icon" />
+                </>
+              )}
             />
-            <img src={email} alt="email" className="email__icon" />
-            {!isValidEmail && emailInput.length > 0 && (
-              <span className="valid__empty">Not a valid email</span>
+            {errors.email && typeof errors.email.message === 'string' && (
+              <div className="valid__empty">{errors.email.message}</div>
             )}
-            {isEmptyEmail && <span className="valid__empty">Can't be empty</span>}
           </div>
         </fieldset>
         <fieldset>
           <label htmlFor="">Password</label>
           <div className="inp">
-            <input
-              type="password"
-              id="input"
-              placeholder="Enter Password"
-              onChange={(e) => handlePasswordChange(e)}
+          <Controller
+              name="password"
+              control={control}
+              defaultValue=""
+              rules={{ required: "Password is required" }}
+              render={({ field }) => (
+                <>
+                  <input {...field} type="password" id="input" placeholder="Enter Password" />
+                  <img src={iconPassword} alt="password" className="email__icon" />
+                </>
+              )}
             />
-            <img src={iconPassword} alt="password" className="email__icon" />
-            {isEmptyPassword && <span className="valid__empty">Can't be empty</span>}
+            {errors.password && typeof errors.password.message === 'string' && (
+              <div className="valid__empty">{errors.password.message}</div>
+            )}
           </div>
         </fieldset>
         <fieldset>
           <label htmlFor="">Repeat Password</label>
           <div className="inp">
-            <input
-              type="password"
-              id="input"
-              placeholder="Repeat Password"
-              onChange={(e) => handleRepeatPasswordChange(e)}
+          <Controller
+              name="repeatPassword"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: "Repeat Password is required",
+                validate: value => value === getValues('password') || "Passwords do not match"
+              }}
+              render={({ field }) => (
+                <>
+                  <input {...field} type="password" id="input" placeholder="Repeat Password" />
+                  <img src={iconPassword} alt="password" className="email__icon" />
+                </>
+              )}
             />
-            <img src={iconPassword} alt="password" className="email__icon" />
-            {!passwordsMatch && (
-              <span className="valid__empty">Passwords do not match</span>
+            {errors.repeatPassword && typeof errors.repeatPassword.message === 'string' && (
+              <div className="valid__empty">{errors.repeatPassword.message}</div>
             )}
           </div>
         </fieldset>
         <Button Text="Login" bgColor="#633cff" color="#fff" height="46px" />
       </form>
+      <p className="auth">
+     have an account?&nbsp;
+    <Button  bgColor="transparent" color="#633cff" Text="Login" onClick={() => navigate('/')}/>
+    </p>
 </section>
     </AuthCont>
   )
@@ -216,7 +225,6 @@ const AuthCont = styled.div`
     color: #ff3939;
     text-align: right;
     font-size: .75rem;
-    font-family: var(--font);
     font-style: normal;
     font-weight: 400;
     line-height: 150%;

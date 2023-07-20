@@ -1,36 +1,26 @@
-import React, { useContext } from 'react'
+import  { useContext } from 'react'
 import styled from 'styled-components'
-import { arrowRigth, colors, phoneMockup } from '../../images'
+import { phoneMockup } from '../../images'
 import LinksContext from '../../contexts/Links'
-
+import { DraggableBox } from './DraggbleBox'
 function PhoneMockup() {
-    const {links,selectedPlatforms} = useContext(LinksContext)
-  
-  return (
-    <PhoneMockupCont>
-    <div className='phone__cont'>
-    <img src={phoneMockup} alt="phone" className='phone' />
-    <div className="link__boxes">
-{links.map((link,index) => {
-     const platformName = selectedPlatforms[index]?.name;
-     const backgroundColor = platformName && colors[platformName] ? colors[platformName] : '#333';
+    const { links} = useContext(LinksContext);
+    console.log(links)
     return (
-        <a href={link.url} key={index} target='_blank'>
-        <div className="inside__box"  style={{ backgroundColor }}>
-        <img src={selectedPlatforms[index]?.icon} alt="" />
-        {selectedPlatforms[index]?.name}
-        <img src={arrowRigth} alt="" />
-        </div>
-        </a>
-    )
-   
-})}
+        <PhoneMockupCont>
+          <div className="phone__cont">
+            <img src={phoneMockup} alt="phone" className="phone" />
+            <div className="link__boxes">
+              {links.map((link, index) => (
+                <DraggableBox key={`items-${link.id}`} index={index} />
+              ))}
+            </div>
+          </div>
+        </PhoneMockupCont>
+    );
+  }
 
-    </div>
-    </div>
-</PhoneMockupCont>
-  )
-}
+  
 const PhoneMockupCont = styled.section`
     height: 834px;
     display: flex;
