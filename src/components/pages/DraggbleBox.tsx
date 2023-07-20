@@ -1,18 +1,11 @@
 import { useDrag, useDrop } from "react-dnd";
 import { colors, arrowRigth } from "../../images";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import LinksContext from "../../contexts/Links";
 
 export const DraggableBox: React.FC<{ index: number }> = ({ index }) => {
     const { links, selectedPlatforms, setLinks, setSelectedPlatforms } = useContext(LinksContext);
-
-    if (selectedPlatforms.length < links.length) {
-        const missingPlatforms = new Array(links.length - selectedPlatforms.length).fill({
-          name: "", // Replace with default platform name
-          icon: "", // Replace with default platform icon
-        });
-        setSelectedPlatforms([...selectedPlatforms, ...missingPlatforms]);
-      }
+    const nodeRef = useRef<HTMLDivElement | null>(null);
     const moveLink = (dragIndex: number, hoverIndex: number) => {
         const dragLink = links[dragIndex];
         const updatedLinks = [...links];
@@ -31,30 +24,54 @@ export const DraggableBox: React.FC<{ index: number }> = ({ index }) => {
         type: string;
         index: number;
       };
-    const [{ isDragging }, drag] = useDrag<DragItem, void, { isDragging: boolean }>(() => ({
-      type: 'LINK_BOX',
-      item: { type: 'LINK_BOX', index },
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging(),
-      }),
-    }));
+      const [{ isDragging }, drag] = useDrag<DragItem, void, { isDragging: boolean }>(() => ({
+        type: 'LINK_BOX',
+        item: { type: 'LINK_BOX', index },
+        collect: (monitor) => ({
+          isDragging: monitor.isDragging(),
+        }),
+      }));
 
-    const [, drop] = useDrop<DragItem, void, { isOver: boolean; canDrop: boolean }>(() => ({
-      accept: 'LINK_BOX',
-      hover: (item) => {
-        if (item.index !== index) {
-          moveLink(item.index, index);
-          item.index = index;
-        }
-      },
-    }));
+      const [, drop] = useDrop<DragItem, void, { isOver: boolean; canDrop: boolean }>(() => ({
+        accept: 'LINK_BOX',
+        hover: (item, monitor) => {
+          const dragIndex = item.index;
+          const hoverIndex = index;
+      
+          if (dragIndex === hoverIndex) {
+            return;
+          }
+          const node = nodeRef.current;
+          if (!node) {
+            return;
+          }
+          const hoverBoundingRect = (node as HTMLElement).getBoundingClientRect();
+      
+          const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      
+          const clientOffset = monitor.getClientOffset();
+          const hoverClientY = (clientOffset as any).y - hoverBoundingRect.top;
+          if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+            return;
+          }
+      
+          if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+            return;
+          }
+          moveLink(dragIndex, hoverIndex);
+          item.index = hoverIndex;
+        },
+      }));
 
     const platformName = selectedPlatforms[index]?.name;
     const backgroundColor = platformName && colors[platformName] ? colors[platformName] : '#333';
 
     return (
       <div
-        ref={(node) => drag(drop(node))}
+      ref={(node) => {
+        nodeRef.current = node;
+        drag(drop(node));
+      }}
         className="inside__box"
         style={{
           backgroundColor: backgroundColor,

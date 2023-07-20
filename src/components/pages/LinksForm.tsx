@@ -43,11 +43,7 @@ function LinksForm() {
       };
      
 
-      
-      
-      useEffect(() => {
-        localStorage.setItem('links', JSON.stringify(links));
-      }, [links]);
+    
   return (
     <CustomLinks>
         <h1 className='custom__title'>Customize your links</h1>
@@ -60,7 +56,7 @@ function LinksForm() {
         </>) : (
           <>
           {links.map((links, index) => {
-            const { platform, url } = links;
+          const { platform, url } = links|| { platform: '', url: '' };
             const key = platform || index;
             return (
               <fieldset className='links' key={key}>
