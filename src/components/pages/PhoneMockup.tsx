@@ -5,7 +5,6 @@ import LinksContext from '../../contexts/Links'
 import { DraggableBox } from './DraggbleBox'
 function PhoneMockup() {
     const { links} = useContext(LinksContext);
-    console.log(links)
     return (
         <PhoneMockupCont>
           <div className="phone__cont">

@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState, } from "react";
+import React, { createContext, useState, } from "react";
 import { DetailsContextValue, initialContextValue } from "./types/profileTypes";
 
 const DetailsContext = createContext<DetailsContextValue>(initialContextValue);

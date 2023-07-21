@@ -1,6 +1,5 @@
 import styled from "styled-components"
 import { email, iconPassword, logoLarge } from "../../images"
-import { useState } from "react";
 import Button from "../reuseable/Button";
 import { auth } from "../../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";

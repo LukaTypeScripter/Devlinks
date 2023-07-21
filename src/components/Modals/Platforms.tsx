@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import { useContext } from 'react'
 import styled from 'styled-components'
 import { iconsData } from '../../images'
 import LinksContext from '../../contexts/Links';
@@ -19,7 +19,7 @@ function Platforms({linkIndex,setIsOpen}:PlatformProps) {
 
   return (
     <LinksModalCont>
-    {iconsData.map((icons,index) => (
+    {iconsData.map((icons) => (
         <div key={icons.id} onClick={() => handlePlatformSelection(icons.name)}>
   <span style={{ WebkitMaskImage: `url(${icons.icon})`,
               maskImage: `url(${icons.icon})`,}}></span>

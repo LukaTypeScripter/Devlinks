@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext,  useState } from 'react'
 import styled from 'styled-components'
 import Button from '../reuseable/Button'
 import { cheveronDown, link } from '../../images'
@@ -15,10 +15,8 @@ interface LinkItem {
 function LinksForm() {
     const initialLinks: LinkItem[] = JSON.parse(localStorage.getItem('links')!) || [];
     const [isOpenArray, setIsOpenArray] = useState<boolean[]>(initialLinks.map(() => false));
-   const [isIndex,setIsindex] = useState(0)
     const {selectedPlatforms,setLinks,links} = useContext(LinksContext)
     const toggleModal = (index: number) => {
-      setIsindex(index)
       setIsOpenArray((prevIsOpenArray) => {
         const updatedArray = [...prevIsOpenArray];
         updatedArray[index] = !updatedArray[index];
@@ -34,7 +32,7 @@ function LinksForm() {
     }
     const RemoveLink = (index: number, e?: React.MouseEvent<HTMLButtonElement>) => {
         e?.preventDefault();
-        setLinks((prevLinks) => prevLinks.filter((link, i) => i !== index));
+        setLinks((prevLinks) => prevLinks.filter((_, i) => i !== index));
       };
      const handleUrlChange = (index:number, url:string) => {
         const updatedLinks = [...links];

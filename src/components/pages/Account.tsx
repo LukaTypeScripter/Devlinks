@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import  { useContext, useEffect,  useState } from 'react'
 import styled from 'styled-components'
-import { logoLarge,link, profileDetailsHeader, phoneMockup, logoSmall, previewHeader } from '../../images'
+import { logoLarge,link, profileDetailsHeader,  logoSmall, previewHeader } from '../../images'
 import Button from '../reuseable/Button'
 import PhoneMockup from './PhoneMockup';
 import LinksForm from './LinksForm';
 import DetailsMockup from './ProfileDetails/DetailsMockup';
 import Details from './ProfileDetails/Details';
-import { getAuth, signOut } from 'firebase/auth';
+
 import AuthContext from '../../contexts/Auth';
 import { useNavigate } from 'react-router-dom';
 function Account() {
@@ -26,7 +26,6 @@ function Account() {
         window.removeEventListener('resize', handleWindowResize);
       };
     });
-    console.log(windowWidth);
     
   return (
     <AccCont>

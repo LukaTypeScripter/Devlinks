@@ -1,11 +1,11 @@
 import styled from "styled-components"
 import { email, iconPassword, logoLarge } from "../../images"
-import { useState } from "react";
+
 import Button from "../reuseable/Button";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
 import { useNavigate } from "react-router-dom";
-import { Controller, FieldErrors, FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { Controller, FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 function SignUp() {
   const { control, handleSubmit, formState: { errors }, setError,getValues  } = useForm();

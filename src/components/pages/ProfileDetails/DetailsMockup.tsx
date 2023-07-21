@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'
+import  { useContext } from 'react'
 import styled from 'styled-components'
-import { arrowRigth, colors, ilustrationEmty, phoneMockup } from '../../../images'
+import { arrowRigth, colors,  phoneMockup } from '../../../images'
 import DetailsContext from '../../../contexts/profileDetails'
 import LinksContext from '../../../contexts/Links'
 
