@@ -118,7 +118,7 @@ function SignUp() {
 
       <p className="auth">
      have an account?&nbsp;
-    <Button  bgColor="transparent" color="#633cff" Text="Register" onClick={() => navigate('/')}/>
+    <Button  bgColor="transparent" color="#633cff" Text="sign up" onClick={() => navigate('/')}/>
     </p>
 </section>
     </AuthCont>
