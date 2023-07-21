@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { logoLarge,link, profileDetailsHeader, phoneMockup } from '../../images'
+import { logoLarge,link, profileDetailsHeader, phoneMockup, logoSmall, previewHeader } from '../../images'
 import Button from '../reuseable/Button'
 import PhoneMockup from './PhoneMockup';
 import LinksForm from './LinksForm';
@@ -13,38 +13,63 @@ function Account() {
     const [activeLink, setActiveLink] = useState('links');
     const {UsersignOut} = useContext(AuthContext)
     const navigate = useNavigate()
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
+    useEffect(() => {
+      const handleWindowResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+  
+      window.addEventListener('resize', handleWindowResize);
+  
+      return () => {
+        window.removeEventListener('resize', handleWindowResize);
+      };
+    });
+    console.log(windowWidth);
+    
   return (
     <AccCont>
         <nav>
-            <img src={logoLarge} alt="logo" onClick={UsersignOut}/>
+            <img src={windowWidth < 740 ? logoSmall:logoLarge} alt="logo" onClick={UsersignOut} className='logo'/>
         <ul className='navbar__links'>
         <li  className={activeLink === 'links' ? 'active' : ''}
         onClick={() => setActiveLink('links')}
         >
         <img src={link} alt="" className='links'/>
-        Links
+        {windowWidth < 740 ? "":"Links"}
         </li>
         <li
          className={activeLink === 'profile' ? 'active' : ''}
          onClick={() => setActiveLink('profile')}
         >
         <img src={profileDetailsHeader} alt="" className='links'/>
-        Profile Details
+        {windowWidth < 740 ? "":"Profile Details"}
         </li>
         </ul>
-        <Button Text='Preview' color='#633cff' bgColor='transparent'  border='1px solid #633cff' width='114px' height='46px' onClick={() => navigate('/preview')}/>
+        <Button Text='Preview' color='#633cff' bgColor='transparent'  border='1px solid #633cff' width='114px' height='46px' onClick={() => navigate('/preview')} windowWidth={windowWidth}
+        queryHeigth='42px' queryWidth='52px'
+        >
+          {windowWidth < 740 && (
+            <img src={previewHeader} alt="header" className='eye' />
+          )}
+        </Button>
         </nav>
         
         {activeLink === "links" ? (
           <>
-          
-          <PhoneMockup />
+    {windowWidth > 940 && (
+            <PhoneMockup />
+           )}
+         
           <LinksForm />
           </>
         ): (
           <>
-          <DetailsMockup />
+           {windowWidth > 940 && (
+            <DetailsMockup />
+           )}
+          
           <Details />
           </>
         )}
@@ -63,6 +88,26 @@ const AccCont = styled.main`
     row-gap: 24px;
     grid-column-gap: 24px;
     column-gap: 24px;
+    @media (max-width: 900px) {
+      grid-template-columns: 100% !important;
+    column-gap: 0;
+    }
+    @media (max-width: 700px) {
+      padding-top: 0;
+    width: 100%;
+    }
+    @media (max-width: 1000px) {
+      grid-template-columns: 353.88px 55%;
+    }
+    @media (max-width: 1330px) {
+      width: 90%;
+    grid-template-columns: 40% 60%;
+}
+.eye {
+  width: 20px;
+    object-fit: contain;
+}
+    
     nav {
     width: 100%;
     height: 78px;
@@ -78,6 +123,7 @@ const AccCont = styled.main`
     height: auto;
     object-fit: contain;
     cursor: pointer;
+    
     }
     .navbar__links {
     display: flex;
@@ -107,7 +153,21 @@ const AccCont = styled.main`
 }
     }
     }
-    
+    @media (max-width: 740px) {
+      nav {
+        height: 74px!important;
+      }
+      .navbar__links {
+        gap: 0 !important;
+      }
+      .logo {
+        width: 32px!important;
+      }
+      li {
+        width: 74px !important;
+    height: 42px !important;
+      }
+    }
 
 `
 

@@ -43,6 +43,9 @@ const PhoneMockupCont = styled.section`
     align-items: center;
     background-color: #fff;
     border-radius: 12px;
+    @media (max-width: 900px) {
+        display: none;
+    }
     .phone__cont {
         position: relative;
     }

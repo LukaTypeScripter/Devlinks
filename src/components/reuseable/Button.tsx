@@ -10,10 +10,14 @@ type ButtonProps = {
     width?:string
     heigth?:string
     onClick?: (e: any) => void
+    children?: React.ReactNode;
+    windowWidth?: number | undefined
+    queryWidth?:string
+    queryHeigth?:string
 }
-function Button({height,bgColor,color,Text,borderRadius,border,width,heigth,onClick}:ButtonProps) {
+function Button({height,bgColor,color,Text,borderRadius,border,width,heigth,onClick,children,windowWidth,queryWidth,queryHeigth}:ButtonProps) {
   return (
-    <Btn onClick={onClick} height={height} bgColor={bgColor} color={color} type='submit' borderRadius={borderRadius} border={border} width={width} heigth={heigth}>{Text}</Btn>
+    <Btn onClick={onClick} height={height} bgColor={bgColor} color={color} type='submit' borderRadius={borderRadius} border={border} width={width} heigth={heigth} windowWidth={windowWidth} queryWidth={queryWidth} queryHeigth={queryHeigth}>{children ||Text}</Btn>
   )
 }
 
@@ -31,8 +35,14 @@ const Btn = styled.button<ButtonProps>`
     border-radius: ${props => props.borderRadius};
     border: ${props => props.border};
     text-align:center;
-    width: ${props => props.width};
-    height: ${props => props.height};
+    width:  ${(props) =>
+    props.windowWidth !== undefined && props.windowWidth < 740
+      ? props.queryWidth
+      : props.width};
+    height:  ${(props) =>
+    props.windowWidth !== undefined && props.windowWidth < 740
+      ? props.queryHeigth
+      : props.height};
 `
 
 export default Button

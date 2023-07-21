@@ -100,6 +100,13 @@ const ProfileCont = styled.form`
     justify-content: space-between;
     align-items: center;
     gap: 16px;
+    @media (max-width: 700px) {
+        width: 92%;
+        flex-direction: column;
+        align-items: flex-start;
+        height:auto;
+        padding: 20px;
+    }
     h1 {
         color: #737373;
     font-style: normal;

@@ -111,6 +111,11 @@ const CustomLinks = styled.form`
     position: relative;
     min-height: 834px;
     background-color: #fff;
+    @media (max-width: 700px) {
+      width: 95%;
+    justify-self: center;
+    padding-top: 24px;
+    }
     .custom__title {
         color: #333;
     font-size: 2rem;
