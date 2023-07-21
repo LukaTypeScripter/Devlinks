@@ -82,9 +82,7 @@ function SignUp() {
                 </>
               )}
             />
-            {errors.password && typeof errors.password.message === 'string' && (
-              <div className="valid__empty">{errors.password.message}</div>
-            )}
+           
           </div>
         </fieldset>
         <fieldset>
@@ -105,16 +103,22 @@ function SignUp() {
                 </>
               )}
             />
-            {errors.repeatPassword && typeof errors.repeatPassword.message === 'string' && (
-              <div className="valid__empty">{errors.repeatPassword.message}</div>
-            )}
+            
           </div>
         </fieldset>
+        {errors.password && typeof errors.password.message === 'string' && (
+              <div className="valid__emptys">{errors.password.message}</div>
+            )}
+            {errors.repeatPassword && typeof errors.repeatPassword.message === 'string' && (
+              <div className="valid__emptys">{errors.repeatPassword.message}</div>
+            )}
         <Button Text="Login" bgColor="#633cff" color="#fff" height="46px" />
+       
       </form>
+
       <p className="auth">
      have an account?&nbsp;
-    <Button  bgColor="transparent" color="#633cff" Text="Login" onClick={() => navigate('/')}/>
+    <Button  bgColor="transparent" color="#633cff" Text="Register" onClick={() => navigate('/')}/>
     </p>
 </section>
     </AuthCont>
@@ -219,7 +223,7 @@ const AuthCont = styled.div`
     object-fit: cover;
     height: auto;
     }
-   .valid__empty {
+    .valid__empty {
     display: block;
     height: 18px;
     color: #ff3939;
@@ -239,6 +243,15 @@ const AuthCont = styled.div`
          }
     }
     }
+    .valid__emptys {
+    display: block;
+    height: 18px;
+    color: #ff3939;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+   }
 `
 
 export default SignUp
